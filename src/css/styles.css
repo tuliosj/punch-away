@@ -1,0 +1,132 @@
+:root {
+  font-size: 62.5%;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
+
+  font-size: 2.4rem;
+  font-weight: 700;
+  font-family: monospace;
+
+  background-color: rgb(240, 240, 240);
+  color: rgb(40, 40, 40);
+}
+
+h1 {
+  font-family: "Alfa Slab One", cursive;
+  font-size: 3.2rem;
+  text-align: right;
+}
+
+main {
+  display: flex;
+  flex-flow: column;
+  justify-items: center;
+}
+
+main > * {
+  max-width: 100vw;
+  max-width: calc(var(--vw, 1vw) * 100);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 8rem;
+}
+
+.logo {
+  width: 12rem;
+  max-height: 12rem;
+  margin-bottom: 1.6rem;
+}
+
+.navigation {
+  display: flex;
+  align-items: baseline;
+}
+.navigation > * {
+  margin-left: 2rem;
+}
+
+/* Forms */
+
+.form {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+.input-group {
+  width: 60rem;
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 0;
+}
+
+.input-group > * {
+  flex-grow: 2;
+  margin: 0.4rem;
+}
+
+.send {
+  align-self: flex-end;
+}
+
+/* Table */
+
+.table {
+  align-self: center;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.8rem;
+}
+
+th:nth-child(odd) {
+  background-color: #ffc83d;
+}
+th:nth-child(even) {
+  background-color: #d48c00;
+}
+
+td:nth-child(odd) {
+  background-color: #ffe5a3;
+}
+td:nth-child(even) {
+  background-color: #d4b77f;
+}
+
+tr {
+  border: 0.2rem solid black;
+  border-left-width: 0.4rem;
+  border-right-width: 0.4rem;
+}
+tr:last-child {
+  border-bottom-width: 0.4rem;
+}
+thead > tr {
+  border-width: 0.4rem;
+}
+
+th:first-child,
+td:first-child {
+  border-right: 0.4rem solid black;
+}
+
+th:nth-child(6),
+td:nth-child(6) {
+  border-right: 0.4rem solid black;
+  border-left: 0.4rem solid black;
+}
