@@ -96,6 +96,10 @@
   color: #fff;
 }
 
+.modal__input-group {
+  width: 40rem;
+}
+
 /**************************\
     Demo Animation Style
   \**************************/

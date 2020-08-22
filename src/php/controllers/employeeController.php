@@ -28,9 +28,9 @@ class Employee {
             $stmt->bindParam(":endianness", $this->endianness);
             $stmt->bindParam(":companies_id", $this->companies_id);
             $stmt->execute();
-            return 1;
+            return "sucess! <a href='log-in.php'>now log in.</a>";
         }catch(PDOException $e){
-            return 0; 
+            return "error, please try again later."; 
         }
     }
 
@@ -44,6 +44,46 @@ class Employee {
             return $stmt->fetch(PDO::FETCH_OBJ);
         }catch(PDOException $e){
             return 0;
+        }
+    }
+
+    public function change_password($new_password){
+        try{
+            $stmt = $this->conn->prepare("SELECT * FROM `employees` WHERE `id` = :id AND `password` = :password");
+
+            $stmt->bindParam(":id", $this->id);
+            $stmt->bindParam(":password", $this->password);
+            $stmt->execute();
+
+            if($stmt->fetch(PDO::FETCH_OBJ)) {
+                $this->set_password($new_password);
+                
+                $stmt = $this->conn->prepare("UPDATE `employees` SET `password` = :password WHERE `id` = :id;");
+    
+                $stmt->bindParam(":id", $this->id);
+                $stmt->bindParam(":password", $this->password);
+                $stmt->execute();
+                return "success!";
+            } else {
+                return "error, old password doesn't match.";
+            }
+        }catch(PDOException $e){
+            return "error, please try again later.";
+        }
+    }
+    
+
+    public function change_preferences(){
+        try{
+            $stmt = $this->conn->prepare("UPDATE `employees` SET `endianness` = :endianness, `24hclock` = :_24hclock WHERE `id` = :id;");
+
+            $stmt->bindParam(":id", $this->id);
+            $stmt->bindParam(":endianness", $this->endianness);
+            $stmt->bindParam(":_24hclock", $this->_24hclock);
+            $stmt->execute();
+            return "success!";
+        }catch(PDOException $e){
+            return "error, please try again later.";
         }
     }
 

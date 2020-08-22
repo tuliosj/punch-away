@@ -13,7 +13,7 @@ if(isset($_POST['log-in'])) {
     if (isset($success->id)) {
         session_start();
         header('Location: index.php');
-        $_SESSION['id'] = $success->id;
+        $_SESSION['id'] = (int)$success->id;
     }
 }
 
@@ -50,12 +50,8 @@ if(isset($_POST['log-in'])) {
         <form method="post" action="log-in.php" enctype="multipart/form-data">
             <div class="form">
                 <?php 
-                if(isset($success)) {
-                    echo '<div class="alert" style="margin-bottom:4rem;">';
-                    if($success == 0) {
-                        echo 'error, email and password don\'t match!';
-                    }
-                    echo '</div>';
+                if(isset($success) && $success == 0) {
+                    echo '<div class="alert" style="margin-bottom:4rem;">error, email and password don\'t match!</div>';
                 }
                 ?>
                 <div class="input-group">

@@ -21,10 +21,10 @@ if(isset($_POST['sign-up'])) {
             
             $success = $employee->insert();
         } else {
-            $success = -2;
+            $success = "error, email already exists!";
         }
     } else {
-        $success = -1;
+        $success = "error, passwords don't match!";
     }
 }
 
@@ -62,17 +62,7 @@ if(isset($_POST['sign-up'])) {
             <div class="form">
                 <?php 
                 if(isset($success)) {
-                    echo '<div class="alert">';
-                    if($success == 1) {
-                        echo 'sucess! <a href="log-in.php">now log in.</a>';
-                    } else if ($success == -1) {
-                        echo 'error, passwords don\'t match!';
-                    } else if ($success == -2) {
-                        echo 'error, email already exists!';
-                    } else {
-                        echo 'error, please try again later.';
-                    }
-                    echo '</div>';
+                    echo '<div class="alert">$success</div>';
                 }
                 ?>
                 <h2>account</h2>

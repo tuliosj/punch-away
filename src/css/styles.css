@@ -59,6 +59,8 @@ header {
 .alert {
   background-color: #ffc83d;
   padding: 8rem 16rem;
+  transition: height 1s, width 1s, padding 1s, visibility 1s,
+    opacity 0.5s ease-out;
 }
 
 .form {
@@ -88,6 +90,7 @@ header {
 .table {
   align-self: center;
   overflow-x: auto;
+  margin-bottom: 8rem;
 }
 
 table {
