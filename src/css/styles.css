@@ -56,6 +56,11 @@ header {
 
 /* Forms */
 
+.alert {
+  background-color: #ffc83d;
+  padding: 8rem 16rem;
+}
+
 .form {
   display: flex;
   flex-flow: column;

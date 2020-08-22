@@ -5,19 +5,20 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema punch-away
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema punch-away
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+DROP DATABASE IF EXISTS `punch-away` ;
+CREATE DATABASE IF NOT EXISTS `punch-away` DEFAULT CHARACTER SET utf8 ;
+USE `punch-away` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`companies`
+-- Table `punch-away`.`companies`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`companies` (
+CREATE TABLE IF NOT EXISTS `punch-away`.`companies` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`))
@@ -25,62 +26,62 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`employees`
+-- Table `punch-away`.`employees`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`employees` (
+CREATE TABLE IF NOT EXISTS `punch-away`.`employees` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `email` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(45) NOT NULL UNIQUE,
   `name` VARCHAR(45) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
   `24hclock` TINYINT(1) NOT NULL DEFAULT 1,
   `endianness` ENUM('L', 'M', 'B') NOT NULL DEFAULT 'L',
   `companies_id` INT UNSIGNED NOT NULL,
-  `daily_minutes` TIME NOT NULL DEFAULT 06:00,
+  `daily_minutes` TIME NOT NULL DEFAULT '06:00:00',
   `admin` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  INDEX `fk_employees_companies_idx` (`companies_id` ASC) VISIBLE,
+  INDEX `fk_employees_companies_idx` (`companies_id` ASC),
   CONSTRAINT `fk_employees_companies`
     FOREIGN KEY (`companies_id`)
-    REFERENCES `mydb`.`companies` (`id`)
+    REFERENCES `punch-away`.`companies` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`work_months`
+-- Table `punch-away`.`work_months`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`work_months` (
+CREATE TABLE IF NOT EXISTS `punch-away`.`work_months` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `employees_id` INT UNSIGNED NOT NULL,
   `month` INT NOT NULL,
   `year` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_work_months_employees1_idx` (`employees_id` ASC) VISIBLE,
+  INDEX `fk_work_months_employees1_idx` (`employees_id` ASC),
   CONSTRAINT `fk_work_months_employees1`
     FOREIGN KEY (`employees_id`)
-    REFERENCES `mydb`.`employees` (`id`)
+    REFERENCES `punch-away`.`employees` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`work_days`
+-- Table `punch-away`.`work_days`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`work_days` (
+CREATE TABLE IF NOT EXISTS `punch-away`.`work_days` (
   `day` DATE NOT NULL,
   `work_months_id` INT UNSIGNED NOT NULL,
-  `start` TIME NOT NULL,
-  `lunch_start` TIME GENERATED ALWAYS AS () VIRTUAL,
-  `lunch_end` TIME NOT NULL,
-  `end` TIME NOT NULL,
+  `start` TIME NULL,
+  `lunch_start` TIME NULL,
+  `lunch_end` TIME NULL,
+  `end` TIME NULL,
   `total` TIME NULL,
-  INDEX `fk_employees_has_months_months1_idx` (`work_months_id` ASC) VISIBLE,
+  INDEX `fk_employees_has_months_months1_idx` (`work_months_id` ASC),
   PRIMARY KEY (`day`),
   CONSTRAINT `fk_employees_has_months_months1`
     FOREIGN KEY (`work_months_id`)
-    REFERENCES `mydb`.`work_months` (`id`)
+    REFERENCES `punch-away`.`work_months` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -89,3 +90,9 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- Inserts
+
+INSERT INTO `companies`(`name`) VALUES ('Acme Inc.');
+INSERT INTO `companies`(`name`) VALUES ('La Casa do Pastel');
+INSERT INTO `companies`(`name`) VALUES ('McRonald\'s');
