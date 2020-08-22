@@ -3,6 +3,7 @@
 class Company {
     private $id;
     private $name;
+    private $gmt_difference;
 
     public function __construct() {
         $database = new Database();
@@ -12,9 +13,10 @@ class Company {
 
     public function insert() {
         try{
-            $stmt = $this->conn->prepare("INSERT INTO `companies`(`name`) VALUES(:name)");
+            $stmt = $this->conn->prepare("INSERT INTO `companies`(`name`,`gmt_difference`) VALUES(:name,:gmt_difference)");
             
             $stmt->bindParam(":name", $this->name);
+            $stmt->bindParam(":gmt_difference", $this->gmt_difference);
             $stmt->execute();
             return 1;
         }catch(PDOException $e){

@@ -1,3 +1,14 @@
+<?php
+
+include_once('./php/database.php');
+include_once('./php/controllers/employeeController.php');
+include_once('./php/controllers/employeeController.php');
+
+session_start();
+
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 

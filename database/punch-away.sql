@@ -21,6 +21,7 @@ USE `punch-away` ;
 CREATE TABLE IF NOT EXISTS `punch-away`.`companies` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
+  `gmt_difference` INT NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -36,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `punch-away`.`employees` (
   `24hclock` TINYINT(1) NOT NULL DEFAULT 1,
   `endianness` ENUM('L', 'M', 'B') NOT NULL DEFAULT 'L',
   `companies_id` INT UNSIGNED NOT NULL,
-  `daily_minutes` TIME NOT NULL DEFAULT '06:00:00',
+  `WEEK_HOURS` TIME NOT NULL DEFAULT '30:00:00',
   `admin` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `fk_employees_companies_idx` (`companies_id` ASC),
@@ -49,39 +50,22 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `punch-away`.`work_months`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `punch-away`.`work_months` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `employees_id` INT UNSIGNED NOT NULL,
-  `month` INT NOT NULL,
-  `year` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_work_months_employees1_idx` (`employees_id` ASC),
-  CONSTRAINT `fk_work_months_employees1`
-    FOREIGN KEY (`employees_id`)
-    REFERENCES `punch-away`.`employees` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `punch-away`.`work_days`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `punch-away`.`work_days` (
-  `day` DATE NOT NULL,
-  `work_months_id` INT UNSIGNED NOT NULL,
+  `date` DATE NOT NULL,
+  `employees_id` INT UNSIGNED NOT NULL,
+  `month` VARCHAR(7) NOT NULL,
   `start` TIME NULL,
   `lunch_start` TIME NULL,
   `lunch_end` TIME NULL,
   `end` TIME NULL,
   `total` TIME NULL,
-  INDEX `fk_employees_has_months_months1_idx` (`work_months_id` ASC),
-  PRIMARY KEY (`day`),
-  CONSTRAINT `fk_employees_has_months_months1`
-    FOREIGN KEY (`work_months_id`)
-    REFERENCES `punch-away`.`work_months` (`id`)
+  PRIMARY KEY (`date`, `employees_id`),
+  INDEX `fk_work_days_employees1_idx` (`employees_id` ASC),
+  CONSTRAINT `fk_work_days_employees1`
+    FOREIGN KEY (`employees_id`)
+    REFERENCES `punch-away`.`employees` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -93,6 +77,9 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- Inserts
 
-INSERT INTO `companies`(`name`) VALUES ('Acme Inc.');
-INSERT INTO `companies`(`name`) VALUES ('La Casa do Pastel');
-INSERT INTO `companies`(`name`) VALUES ('McRonald\'s');
+INSERT INTO `companies`(`name`,`gmt_difference`) VALUES ('Acme Inc.',-3);
+INSERT INTO `companies`(`name`,`gmt_difference`) VALUES ('La Casa do Pastel',2);
+INSERT INTO `companies`(`name`,`gmt_difference`) VALUES ('McRonald\'s',-3);
+
+INSERT INTO `employees`(`email`, `name`, `password`, `24hclock`, `endianness`, `companies_id`, `week_hours`) VALUES ("tuliosjardim@gmail.com", "Túlio Jardim", "5f6955d227a320c7f1f6c7da2a6d96a851a8118f", 1, 'L', 1, '30:00:00');
+INSERT INTO `employees`(`email`, `name`, `password`, `24hclock`, `endianness`, `companies_id`, `week_hours`) VALUES ("edinho@gmail.com", "Edson Jardim", "5f6955d227a320c7f1f6c7da2a6d96a851a8118f", 0, 'M', 2, '40:00:00');
