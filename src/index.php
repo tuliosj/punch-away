@@ -104,44 +104,46 @@ if(isset($_SESSION)) {
                 </div>
             </div>
         </form>
-        <div class="table">
-            <h2><?php echo $work_days->get_month() ?></h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>📅</th>
-                        <th>punched in</th>
-                        <th>went out</th>
-                        <th>got back</th>
-                        <th>punched out</th>
-                        <th>edit</th>
-                        <th>day hours</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php 
+        <div class="table-container">
+            <div class="table">
+                <h2><?php echo $work_days->get_month() ?></h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>📅</th>
+                            <th>punched in</th>
+                            <th>went out</th>
+                            <th>got back</th>
+                            <th>punched out</th>
+                            <th>edit</th>
+                            <th>day hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
                     $stmt = $work_days->index();
                     while($row = $stmt->fetch(PDO::FETCH_OBJ)) { ?>
-                    <tr>
-                        <td><?php echo $work_days->format_date($row->date) ?></td>
-                        <td><?php echo $work_days->format_clock($row->start) ?></td>
-                        <td><?php echo $work_days->format_clock($row->lunch_start) ?></td>
-                        <td><?php echo $work_days->format_clock($row->lunch_end) ?></td>
-                        <td><?php echo $work_days->format_clock($row->end) ?></td>
-                        <td>
-                            <button data-micromodal-trigger="modal-date" onclick="edit('<?php echo $row->date ?>')">
-                                ✏️
-                            </button>
-                        </td>
-                        <td class="table__day_hours"><?php echo $row->total ?></td>
-                    </tr>
-                    <?php } ?>
-                    <tr>
-                        <td colspan='6'>Total</td>
-                        <td id='table__total'>3</td>
-                    </tr>
-                </tbody>
-            </table>
+                        <tr>
+                            <td><?php echo $work_days->format_date($row->date) ?></td>
+                            <td><?php echo $work_days->format_clock($row->start) ?></td>
+                            <td><?php echo $work_days->format_clock($row->lunch_start) ?></td>
+                            <td><?php echo $work_days->format_clock($row->lunch_end) ?></td>
+                            <td><?php echo $work_days->format_clock($row->end) ?></td>
+                            <td>
+                                <button data-micromodal-trigger="modal-date" onclick="edit('<?php echo $row->date ?>')">
+                                    ✏️
+                                </button>
+                            </td>
+                            <td class="table__day_hours"><?php echo $row->total ?></td>
+                        </tr>
+                        <?php } ?>
+                        <tr>
+                            <td colspan='6'>Total</td>
+                            <td id='table__total'>3</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
     <div class="modal micromodal-slide" id="modal-date" aria-hidden="true">

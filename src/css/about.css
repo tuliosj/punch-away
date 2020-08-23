@@ -8,3 +8,7 @@ main > * {
 .about-logo {
   max-width: 35rem;
 }
+
+h1 {
+  text-align: center;
+}

@@ -26,6 +26,7 @@ main {
   display: flex;
   flex-flow: column;
   justify-items: center;
+  margin-bottom: 8rem;
 }
 
 main > * {
@@ -87,10 +88,12 @@ header {
 
 /* Table */
 
+.table-container {
+  padding: 4rem;
+}
+
 .table {
-  align-self: center;
   overflow-x: auto;
-  margin-bottom: 8rem;
 }
 
 table {
@@ -138,4 +141,30 @@ th:nth-child(6),
 td:nth-child(6) {
   border-right: 0.4rem solid black;
   border-left: 0.4rem solid black;
+}
+
+@media (max-width: 51.874em) {
+  header {
+    flex-flow: column;
+  }
+}
+@media (max-width: 37.5em) {
+  .navigation {
+    flex-flow: column-reverse;
+    align-items: center;
+  }
+  .navigation > * {
+    margin: 2rem 0;
+  }
+  .input-group {
+    max-width: 40rem;
+  }
+  .modal__close {
+    display: none;
+  }
+}
+@media (min-width: 51.874em) {
+  .table-container {
+    align-self: center;
+  }
 }
