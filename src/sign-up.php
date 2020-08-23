@@ -62,7 +62,7 @@ if(isset($_POST['sign-up'])) {
             <div class="form">
                 <?php 
                 if(isset($success)) {
-                    echo '<div class="alert">$success</div>';
+                    echo '<div class="alert">'.$success.'</div>';
                 }
                 ?>
                 <h2>account</h2>

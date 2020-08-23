@@ -2,6 +2,10 @@
   font-size: 62.5%;
 }
 
+html {
+  background-color: rgb(240, 240, 240);
+}
+
 html,
 body {
   margin: 0;
@@ -12,7 +16,6 @@ body {
   font-weight: 700;
   font-family: monospace;
 
-  background-color: rgb(240, 240, 240);
   color: rgb(40, 40, 40);
 }
 
@@ -166,5 +169,11 @@ td:nth-child(6) {
 @media (min-width: 51.874em) {
   .table-container {
     align-self: center;
+  }
+  html {
+    background-image: url("../img/background-clock.png"),
+      url("../img/background-flex.png");
+    background-repeat: no-repeat, no-repeat;
+    background-position: top left, right bottom;
   }
 }

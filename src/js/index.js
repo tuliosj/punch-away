@@ -42,8 +42,28 @@ function edit(date) {
       document.getElementById("modal__editor").innerHTML = this.responseText;
     }
   };
-  xmlhttp.open("GET", "_edit-date.php?q=" + date);
+  const urlParams = new URLSearchParams(window.location.search);
+  xmlhttp.open(
+    "GET",
+    "_edit-date.php?q=" +
+      date +
+      (urlParams.get("month") ? "&month=" + urlParams.get("month") : "")
+  );
   xmlhttp.send();
+}
+
+function fill_now(attribute) {
+  const d = new Date();
+  const _24hclock = document.getElementById("_24hclock").value;
+  if (_24hclock == "0") {
+    document.getElementById(attribute + "_hours").value =
+      d.getHours() % 12 ||
+      12 + 12 * parseInt(document.getElementById(attribute + "_ampm"));
+  } else {
+    document.getElementById(attribute + "_hours").value = d.getHours();
+  }
+  document.getElementById(attribute + "_minutes").value = d.getMinutes();
+  document.getElementById(attribute + "_seconds").value = d.getSeconds();
 }
 
 function get_seconds(hours, minutes, seconds, pm, _24hclock) {

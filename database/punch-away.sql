@@ -37,7 +37,6 @@ CREATE TABLE IF NOT EXISTS `punch-away`.`employees` (
   `24hclock` TINYINT(1) NOT NULL DEFAULT 1,
   `endianness` ENUM('L', 'M', 'B') NOT NULL DEFAULT 'L',
   `companies_id` INT UNSIGNED NOT NULL,
-  `week_hours` TIME NOT NULL DEFAULT '30:00:00',
   `admin` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `fk_employees_companies_idx` (`companies_id` ASC),
@@ -89,9 +88,11 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- Inserts
 
-INSERT INTO `companies`(`name`,`gmt_difference`) VALUES ('Acme Inc.',-3);
-INSERT INTO `companies`(`name`,`gmt_difference`) VALUES ('La Casa do Pastel',2);
-INSERT INTO `companies`(`name`,`gmt_difference`) VALUES ('McRonald\'s',-3);
+INSERT INTO `companies`(`name`, `gmt_difference`) VALUES ('Acme Inc.',-3);
+INSERT INTO `companies`(`name`, `gmt_difference`) VALUES ('La Casa do Pastel',2);
+INSERT INTO `companies`(`name`, `gmt_difference`) VALUES ('McRonald\'s',-3);
 
-INSERT INTO `employees`(`email`, `name`, `password`, `24hclock`, `endianness`, `companies_id`, `week_hours`) VALUES ("tuliosjardim@gmail.com", "Túlio Jardim", "5f6955d227a320c7f1f6c7da2a6d96a851a8118f", 1, 'L', 1, '30:00:00');
-INSERT INTO `employees`(`email`, `name`, `password`, `24hclock`, `endianness`, `companies_id`, `week_hours`) VALUES ("edinho@gmail.com", "Edson Jardim", "5f6955d227a320c7f1f6c7da2a6d96a851a8118f", 0, 'M', 2, '40:00:00');
+INSERT INTO `employees`(`email`, `name`, `password`, `24hclock`, `endianness`, `companies_id`) VALUES ("tuliosjardim@gmail.com", "Túlio Jardim", "5f6955d227a320c7f1f6c7da2a6d96a851a8118f", 1, 'L', 1);
+INSERT INTO `employees`(`email`, `name`, `password`, `24hclock`, `endianness`, `companies_id`) VALUES ("edinho@gmail.com", "Edson Jardim", "5f6955d227a320c7f1f6c7da2a6d96a851a8118f", 0, 'M', 2);
+
+INSERT INTO `work_days`(`date`, `employees_id`, `month`) VALUES ('2020-07-31', 1, '2020/07');

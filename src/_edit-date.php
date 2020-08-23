@@ -7,7 +7,7 @@ session_start();
 
 function cast($x) {return (int)$x;}
 
-function options($i, $time, $_24hclock) {
+function options($attribute, $time, $_24hclock) {
     $time = explode(':',$time);
     $time = array_map('cast',$time);
 
@@ -69,7 +69,7 @@ if(isset($_SESSION)) {
         <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
     </header>
     <main class="modal__content" id="modal-date-content">
-        <form name="date_edit" method="post" action="index.php" enctype="multipart/form-data">
+        <form name="date_edit" method="post" action="index.php'. (isset($_GET['month']) ? '?month='.$_GET['month'] : '') .'" enctype="multipart/form-data">
             <div class="form">
                 <input type="hidden" name="_24hclock" id="_24hclock" value="'.$_24hclock.'">
                 <input type="hidden" name="edited-date" id="edited-date" value="'.$date.'">
