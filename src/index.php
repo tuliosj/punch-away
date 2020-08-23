@@ -32,6 +32,23 @@ if(isset($_SESSION)) {
         $work_days->set_month($_GET['month']);
     }
     $work_days->generate_month();
+    
+
+    if(isset($_POST['date_change'])) {
+        $work_days->set_date($_POST['edited-date']);
+        if($_POST['_24hclock'] == '0') {
+            $work_days->set_start($work_days->format_from_12hform($_POST['start_hours'],$_POST['start_minutes'],$_POST['start_seconds'],$_POST['start_ampm']));
+            $work_days->set_lunch_start($work_days->format_from_12hform($_POST['lunch_start_hours'],$_POST['lunch_start_minutes'],$_POST['lunch_start_seconds'],$_POST['lunch_start_ampm']));
+            $work_days->set_lunch_end($work_days->format_from_12hform($_POST['lunch_end_hours'],$_POST['lunch_end_minutes'],$_POST['lunch_end_seconds'],$_POST['lunch_end_ampm']));
+            $work_days->set_end($work_days->format_from_12hform($_POST['end_hours'],$_POST['end_minutes'],$_POST['end_seconds'],$_POST['end_ampm']));
+        } else {
+            $work_days->set_start($work_days->format_from_24hform($_POST['start_hours'],$_POST['start_minutes'],$_POST['start_seconds']));
+            $work_days->set_lunch_start($work_days->format_from_24hform($_POST['lunch_start_hours'],$_POST['lunch_start_minutes'],$_POST['lunch_start_seconds']));
+            $work_days->set_lunch_end($work_days->format_from_24hform($_POST['lunch_end_hours'],$_POST['lunch_end_minutes'],$_POST['lunch_end_seconds']));
+            $work_days->set_end($work_days->format_from_24hform($_POST['end_hours'],$_POST['end_minutes'],$_POST['end_seconds']));
+        }
+        $work_days->update();
+    }
 
 } else {
     header('Location: about.php');
@@ -116,9 +133,13 @@ if(isset($_SESSION)) {
                                 ✏️
                             </button>
                         </td>
-                        <td><?php echo $row->total ?></td>
+                        <td class="table__day_hours"><?php echo $row->total ?></td>
                     </tr>
                     <?php } ?>
+                    <tr>
+                        <td colspan='6'>Total</td>
+                        <td id='table__total'>3</td>
+                    </tr>
                 </tbody>
             </table>
         </div>

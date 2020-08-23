@@ -19,13 +19,16 @@ class WorkDay {
         $this->month = gmdate("Y/m", $this->today());
     }
 
-    public function insert() {
+    public function update() {
         try{
-            $stmt = $this->conn->prepare("INSERT INTO `work_days`(`date`, `employees_id`, `month`) VALUES(:date, :employees_id, :month)");
+            $stmt = $this->conn->prepare("UPDATE `work_days` SET `start` = :start, `lunch_start` = :lunch_start, `lunch_end` = :lunch_end, `end` = :end  WHERE `date` = :date AND `employees_id` = :employees_id;");
             
             $stmt->bindParam(":date", $this->date);
             $stmt->bindParam(":employees_id", $this->employees_id);
-            $stmt->bindParam(":month", $this->month);
+            $stmt->bindParam(":start", $this->start);
+            $stmt->bindParam(":lunch_start", $this->lunch_start);
+            $stmt->bindParam(":lunch_end", $this->lunch_end);
+            $stmt->bindParam(":end", $this->end);
             $stmt->execute();
             return 1;
         }catch(PDOException $e){
@@ -152,7 +155,6 @@ class WorkDay {
         }
     }
     
-
     public function format_clock($time) {
         $_24hclock = $this->get_24hclock();
 
@@ -168,8 +170,25 @@ class WorkDay {
         return $time;
     }
 
+    public function format_from_12hform($hours, $minutes, $seconds, $pm) {
+        if ($hours=='12') {
+            $hours = '00';
+        }
+        return (sprintf("%02d",$hours)+(12*$pm)).':'.sprintf("%02d",$minutes).':'.sprintf("%02d",$seconds);
+    }
+
+    public function format_from_24hform($hours, $minutes, $seconds) {
+        return sprintf("%02d",$hours).':'.sprintf("%02d",$minutes).':'.sprintf("%02d",$seconds);
+    }
+
     public function set_date($date) {
         $this->date = $date;
+    }
+    
+    public function get_month() {
+        $date = explode('/', $this->month);
+        $dateObj   = DateTime::createFromFormat('!m', $date[1]);
+        return strtolower($dateObj->format('F ')) . $date[0];
     }
 
     public function set_month($month) {
@@ -180,10 +199,20 @@ class WorkDay {
             }
         } 
     }
-    
-    public function get_month() {
-        $date = explode('/', $this->month);
-        $dateObj   = DateTime::createFromFormat('!m', $date[1]);
-        return strtolower($dateObj->format('F ')) . $date[0];
+
+    public function set_start($start) {
+        $this->start = $start;
+    }
+
+    public function set_lunch_start($lunch_start) {
+        $this->lunch_start = $lunch_start;
+    }
+
+    public function set_lunch_end($lunch_end) {
+        $this->lunch_end = $lunch_end;
+    }
+
+    public function set_end($end) {
+        $this->end = $end;
     }
 }

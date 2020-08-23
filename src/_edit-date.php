@@ -7,7 +7,7 @@ session_start();
 
 function cast($x) {return (int)$x;}
 
-function options($time, $_24hclock) {
+function options($i, $time, $_24hclock) {
     $time = explode(':',$time);
     $time = array_map('cast',$time);
 
@@ -15,7 +15,7 @@ function options($time, $_24hclock) {
         $ampm_select = '';
     } else {
         $ampm_select = 
-        '<select name="lunch_start_ampm" id="lunch_start_ampm" required>
+        '<select '.($attribute=="start" ? 'onchange=\'fill_next(0)\'' : ($attribute=="lunch_start"?'onchange=\'fill_next(1)\'':'onchange=\'fill_next(2)\'')).' name="'.$attribute.'_ampm" id="'.$attribute.'_ampm" required>
             <option value="0"'.($time[0]<12?' selected':'').'>a.m.</option>
             <option value="1"'.($time[0]>11?' selected':'').'>p.m.</option>
         </select>';
@@ -28,22 +28,22 @@ function options($time, $_24hclock) {
     $hours_options = "";
     if($_24hclock) {
         for ($i=0; $i < 24; $i++) { 
-            $hours_options .= "<option value='".sprintf("%02d",$i)."' ". ($time[0]==$i?'selected>':'>').sprintf("%02d",$i)."</option>";
+            $hours_options .= "<option value='".sprintf("%d",$i)."' ". ($time[0]==$i?'selected>':'>').sprintf("%02d",$i)."</option>";
         }
     } else {
         for ($i=1; $i < 13; $i++) { 
-            $hours_options .= "<option value='".sprintf("%02d",$i)."' ". ($time[0]==$i?'selected>':'>').sprintf("%02d",$i)."</option>";
+            $hours_options .= "<option value='".sprintf("%d",$i)."' ". ($time[0]==$i?'selected>':'>').sprintf("%02d",$i)."</option>";
         }
     }
 
     $minutes_options = "";
     for ($i=0; $i < 60; $i++) { 
-        $minutes_options .= "<option value='".sprintf("%02d",$i)."' ". ($time[1]==$i?'selected>':'>').sprintf("%02d",$i)."</option>";
+        $minutes_options .= "<option value='".sprintf("%d",$i)."' ". ($time[1]==$i?'selected>':'>').sprintf("%02d",$i)."</option>";
     }
 
     $seconds_options = "";
     for ($i=0; $i < 60; $i++) { 
-        $seconds_options .= "<option value='".sprintf("%02d",$i)."' " . ($time[2]==$i?'selected>':'>').sprintf("%02d",$i)."</option>";
+        $seconds_options .= "<option value='".sprintf("%d",$i)."' " . ($time[2]==$i?'selected>':'>').sprintf("%02d",$i)."</option>";
     }
 
     return [$hours_options, $minutes_options, $seconds_options, $ampm_select];
@@ -56,10 +56,10 @@ if(isset($_SESSION)) {
     $todays_work = $work_days->view();
     $_24hclock = $work_days->get_24hclock();
 
-    $start_options = options($todays_work->start, $_24hclock);
-    $lunch_start_options = options($todays_work->lunch_start, $_24hclock);
-    $lunch_end_options = options($todays_work->lunch_end, $_24hclock);
-    $end_options = options($todays_work->end, $_24hclock);
+    $start_options = options('start', $todays_work->start, $_24hclock);
+    $lunch_start_options = options('lunch_start', $todays_work->lunch_start, $_24hclock);
+    $lunch_end_options = options('lunch_end', $todays_work->lunch_end, $_24hclock);
+    $end_options = options('end', $todays_work->end, $_24hclock);
 
     $modal = 
     '<header class="modal__header">
@@ -71,18 +71,20 @@ if(isset($_SESSION)) {
     <main class="modal__content" id="modal-date-content">
         <form name="date_edit" method="post" action="index.php" enctype="multipart/form-data">
             <div class="form">
+                <input type="hidden" name="_24hclock" id="_24hclock" value="'.$_24hclock.'">
+                <input type="hidden" name="edited-date" id="edited-date" value="'.$date.'">
                 <div class="input-group modal__input-group">
                     <label for="start_hours">👨‍💻 punched in</label>
                     <div>
-                        <select name="start_hours" id="start_hours" required>
+                        <select onchange=\'fill_next(0)\' name="start_hours" id="start_hours" required>
                             '.$start_options[0].'
                         </select>
                         :
-                        <select name="start_minutes" id="start_minutes" required>
+                        <select onchange=\'fill_next(0)\' name="start_minutes" id="start_minutes" required>
                             '.$start_options[1].'
                         </select>
                         :
-                        <select name="start_seconds" id="start_seconds" required>
+                        <select onchange=\'fill_next(0)\' name="start_seconds" id="start_seconds" required>
                             '.$start_options[2].'
                         </select>
                         '.$start_options[3].'
@@ -92,15 +94,15 @@ if(isset($_SESSION)) {
                 <div class="input-group modal__input-group">
                     <label for="lunch_start">🍽️ went out</label>
                     <div>
-                        <select name="lunch_start_hours" id="lunch_start_hours" required>
+                        <select onchange=\'fill_next(1)\' name="lunch_start_hours" id="lunch_start_hours" required>
                             '.$lunch_start_options[0].'
                         </select>
                         :
-                        <select name="lunch_start_minutes" id="lunch_start_minutes" required>
+                        <select onchange=\'fill_next(1)\' name="lunch_start_minutes" id="lunch_start_minutes" required>
                             '.$lunch_start_options[1].'
                         </select>
                         :
-                        <select name="lunch_start_seconds" id="lunch_start_seconds" required>
+                        <select onchange=\'fill_next(1)\' name="lunch_start_seconds" id="lunch_start_seconds" required>
                             '.$lunch_start_options[2].'
                         </select>
                         '.$lunch_start_options[3].'
@@ -110,15 +112,15 @@ if(isset($_SESSION)) {
                 <div class="input-group modal__input-group">
                     <label for="lunch_end">🎯 got back</label>
                     <div>
-                        <select name="lunch_end_hours" id="lunch_end_hours" required>
+                        <select onchange=\'fill_next(2)\' name="lunch_end_hours" id="lunch_end_hours" required>
                             '.$lunch_end_options[0].'
                         </select>
                         :
-                        <select name="lunch_end_minutes" id="lunch_end_minutes" required>
+                        <select onchange=\'fill_next(2)\' name="lunch_end_minutes" id="lunch_end_minutes" required>
                             '.$lunch_end_options[1].'
                         </select>
                         :
-                        <select name="lunch_end_seconds" id="lunch_end_seconds" required>
+                        <select onchange=\'fill_next(2)\' name="lunch_end_seconds" id="lunch_end_seconds" required>
                             '.$lunch_end_options[2].'
                         </select>
                         '.$lunch_end_options[3].'

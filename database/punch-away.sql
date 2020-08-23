@@ -70,6 +70,18 @@ CREATE TABLE IF NOT EXISTS `punch-away`.`work_days` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- Triggers
+
+DELIMITER $$
+
+CREATE TRIGGER `calculate_total`
+BEFORE UPDATE ON `work_days`
+FOR EACH ROW
+BEGIN
+  SET NEW.`total` = ((NEW.`end` - NEW.`lunch_end`) + (NEW.`lunch_start` - NEW.`start`));
+END$$
+
+DELIMITER ;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
